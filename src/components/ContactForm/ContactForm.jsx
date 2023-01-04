@@ -17,7 +17,7 @@ export const ContactForm = () => {
       setName(e.target.value);
     }
     if (e.target.name === 'number') {
-      setNumber(e.target.value);
+      setNumber(e.target.value.toLowerCase());
     }
   };
 
