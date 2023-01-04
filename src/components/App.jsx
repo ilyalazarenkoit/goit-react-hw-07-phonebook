@@ -3,9 +3,17 @@ import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { useSelector } from 'react-redux';
 import css from '../components/App.module.css';
+import { selectContacts } from 'redux/selectors';
+import { fetchContacts } from 'redux/operations';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 export const App = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <>
@@ -15,7 +23,7 @@ export const App = () => {
 
         <h2 className={css.title}>Contacts:</h2>
         {contacts.length > 0 ? <Filter /> : null}
-        {contacts.length === 0 ? (
+        {!contacts.length ? (
           <h2 className={css.title}>You have no contacts yet</h2>
         ) : (
           <ContactList />

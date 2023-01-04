@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import formStyle from '../ContactForm/ContactForm.module.css';
-import { nanoid } from 'nanoid';
+import { addContact } from 'redux/operations';
 import { useDispatch } from 'react-redux';
-import { addContact } from 'redux/contacts/contactsSlice';
+import { useSelector } from 'react-redux';
+import { selectContacts } from 'redux/selectors';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
-
+  const contacts = useSelector(selectContacts);
   const handleChange = e => {
     e.preventDefault();
     if (e.target.name === 'name') {
@@ -21,12 +22,17 @@ export const ContactForm = () => {
   };
 
   const onSumbit = e => {
-    let contact = {
-      name: name,
-      number: number,
-      id: nanoid(),
-    };
     e.preventDefault();
+    let contact = {
+      name: name.toUpperCase().slice(0, 1) + name.slice(1, name.length),
+      phone: number,
+    };
+
+    if (contacts.find(item => item.name === contact.name)) {
+      alert(`${contact.name} is already in contacts`);
+      reset();
+      return;
+    }
     dispatch(addContact(contact));
     reset();
   };
